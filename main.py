@@ -20,11 +20,11 @@ from selenium.webdriver.common.by import By
 Mail_Address = []
 
 # 블로그 url
-url = 'https://blog.naver.com/bjdmc4/222616996072'
+url = '블로그 주소'
 
 # 크롬 드라이버를 실행하는 과정
 # 크롬 드라이버를 실행할 때에 위치를 적어주는 경우 \\ 로 메꿔야함
-driver = webdriver.Chrome('C:\\Users\\CKIRUser\\Downloads\\chromedriver_win32\\chromedriver.exe')
+driver = webdriver.Chrome('저장되어있는 위치')
 driver.get(url)
 
 # 블로그의 경우 HTMl 에서 frame 이 나눠져있어 frame Name 을 잘보고 Frame 을 바꿔줘야함
