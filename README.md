@@ -3,12 +3,11 @@
 
 
 
-                                                                              Crawling-Comments Info
+                                                             Crawling-Comments Info
                                               
                                               
                                               
-                                                    Crawling Comments in Naver Blog ( in terms of Root User for collecting mails ) 
-
+                                   Crawling Comments in Naver Blog ( in terms of Root User for collecting mails ) 
 
 
 
