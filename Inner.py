@@ -53,6 +53,7 @@ if __name__ == '__main__':
                     print(prev_num)
                 if (prev_num == 1):
                     count += 1
+            insert_txt()
             driver.quit()
         except:
             print('Error!! Modify the code please...\n')
