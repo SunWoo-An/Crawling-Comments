@@ -6,40 +6,13 @@ from selenium.webdriver.common.by import By
 
 Check_Last_Mail = False
 
-# 함수인자로 Chromedriver 위치와 Blog 의 주소를 받아오는 함수
-def Naver_Blog(mail, location, url):
-
-    driver.webdriver.chrome(location)
-    driver.get(url)
-    driver.switch_to.frame('mainFrame')
-    count = 0
-    while count < 2:
-        html = driver.page_source
-        soup = BeautifulSoup(html,'html.parser')
-        comments = soup.find_all('div', {'class' : 'u_cbox_text_wrap'})
-
-        comments = extract_email(comments)
-        check_mail(mail, comments)
-        if (Check_Last_Mail == True):
-            break
-        else:
-            btn_more = driver.find_element(By.XPATH,'')
-            btn_more.click()
-            prev = soup.find('strong',{'class' : ''})
-            prev_num = int(prev.get_text().strip())
-
-            if(prev_num == 1):
-                count += 1
-
-    driver.quit()
-
-
 # check_mail 함수가 너무 시간상으로 효율적이지 않음 이것을 새롭게 구현해볼 수 있지는 않을까?
 
 # 2번째 이용자일시, 이전에 크롤링해왔던 댓글들을 제외한 새로운 댓글들을 받아오는 함수
 # 1번째 이용자여도 이를 실행시킬 수 있도록 하는 것이 포인트이다.
 def check_mail(mail, comments):
     Mail_list = []
+    global Check_Last_Mail
     if(int(mail) == 0):
         for comment in comments:
             Mail_list.append(comment)
@@ -50,6 +23,7 @@ def check_mail(mail, comments):
                 Mail_list.append(comment)
             else:
                 Check_Last_Mail = True
+                break
     with open('Defined Lists.txt', 'w', encoding='UTF-8') as f:
         for line in Mail_list:
             f.write(line)
