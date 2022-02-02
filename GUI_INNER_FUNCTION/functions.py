@@ -11,11 +11,6 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 
 if __name__ == '__main__':
-    root = Tk()
-    root.title('Crawling')
-    root.geometry('240x240')
-    root.resizable(False, False)
-
     Check_Last_Mail = False
     Final_list = []
 
@@ -28,6 +23,13 @@ if __name__ == '__main__':
     driver = webdriver.Chrome('C:\\Users\\CKIRUser\\Downloads\\chromedriver_win32\\chromedriver.exe', options = options)
 
     list = []
+    
+    root = Tk()
+    root.title('Crawling')
+    root.geometry('240x240')
+    root.resizable(False, False)
+
+    
 
     filename_txt = 'Defined Lists.txt'
     def open_txt():
