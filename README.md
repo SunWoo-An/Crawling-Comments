@@ -17,11 +17,31 @@
 이러한 상황에서 댓글 개수가 수동으로 받아오기에 힘들 경우, 이 Crawling-Comments 를 이용하여 추출해 낼 수 있습니다.
 
 
+                                                                   Caution Points
+                                                                  
+                                                     이 프로그램은 Chrome 사이트를 이용한 Crawler 입니다.
+                                                     
+                                     혹여나 Chrome 사이트가 없으신 분들은 Chrome 을 다운받아주셔야 프로그램이 실행이 됩니다.
+
+
+
+* 사용법 instructions
+
+1) Chrome 상단 오른편에 있는 Menu아이콘( three points . . .)을 클릭해주고, 도움말(Help) 에 들어가신 뒤 Chrome 정보( Chrome info )를 클릭하여 버전을 확인합니다. 
+
+2) Chromedriver 메인 주소 : https://chromedriver.chromium.org/downloads 홈페이지에 들어가서 자신의 크롬 버젼에 맞는 chromedriver를 다운해줍니다. 이때 자신의 크롬이 93버젼일 경우, 93버젼 chromedriver들 중 제일 최신의 드라이버를 다운받아 주셔야합니다.
+
+3) Window 의 경우 window_32.zip 을 MacOS의 경우 MAC 버젼으로 다운받아야합니다. ( 저희가 작성한 프로그램은 Window 버젼을 중심으로 돌아가는 프로그램입니다. 혹여나 예외가 생길 수 있으므로 이에 대해서 추후 개발해나갈 예정입니다. ) 
+
+4) 압축을 푼 뒤, Window 파일 탐색기에서 chrome 드라이버가 있는 위치를 복사합니다... ( 파일 모양 옆 "내 PC > 다운로드 > chromedriver_win32" 이 부분을 클릭하시면 원하는 위치가 나옵니다.
+
+5) 예를 들어, C:\Users\Downloads\chromedriver_win32 라는 주소가 나왔을 경우, C:\\Users\\Downloads\\chromedriver_win32\\chromedriver.exe 이처럼 \ -> \\ 로 바꿔주신 다음 맨 뒤에 chromedriver.exe 를 복사하시면 됩니다.
+
+6) 이를 프로그램 내의 Blog_url 이 아닌 chromedriver_url 에 넣어줍니다!!!!
+
+
+
+
 *보완점이자 참고사항
-
-비밀댓글까지 크롤링하기위해 네이버에 로그인하는 과정이 필요했고, 아이디와 패스워드는 selenium으로 연 네이버 로그인창에서 '직접' 입력해야합니다.
-네이버 로그인 봇 감지 로직에 감지되기 때문에 그렇습니다.
-
-또한 이메일 뒷주소를 잘못 쓴 경우도 꽤 있었는데, 예를 들면 naver.com을 never.com, naver.comps, nvear.com 등으로 댓글을 단 경우가 있었습니다. 
-이같은 경우는 수작업으로 수정해야할 수 밖에 없지만, 기회가 된다면 딥러닝의 자연어처리를 공부해 위와 같이 잘못된 이메일 뒷주소도 바르게 정정해주는 모델도 구현해보겠습니다.
-
+1) 딥러닝의 자연어처리를 통해 메일주소가 잘못된 경우를 Collecting 하는 모델을 구현해보고싶음.
+2) 프로그램의 효율성을 신경쓰지 않은 채 코드를 짜 코드의 효율성이 떨어짐. -> 이를 보완하고자 수정할 예정이다.
