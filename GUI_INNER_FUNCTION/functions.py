@@ -2,6 +2,10 @@
 # 2번째 이용자일시, 이전에 크롤링해왔던 댓글들을 제외한 새로운 댓글들을 받아오는 함수
 # 1번째 이용자여도 이를 실행시킬 수 있도록 하는 것이 포인트이다.
 
+
+#chromedriver 버젼 83 제일 위에 있는 버젼
+# 크롬 드라이버 경로  C:\\Users\\CKIRUser\\Downloads\\chromedriver_win32\\chromedriver.exe
+
 import re
 import os
 from tkinter import *
