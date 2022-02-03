@@ -1,7 +1,9 @@
 from tkinter import *
 from tkinter.messagebox import *
-import main
+import functions
 global blog_addres, ids, pwd
+from selenium import webdriver
+
 blog_address, ids, pwd, from_email = False, False, False, False
 
 root = Tk()
@@ -33,102 +35,43 @@ ok_button = Button(root, text='확인')
 null_label2 = Label(root, text='\n')
 
 
-'''def ok_button_1_click(string):
-    global crawling_cmt_label, blog_address, ids, pwd
-    blog_address = blog_address_entry.get()
-    ids = id_entry.get()
-    pwd = pwd_entry.get()
-
-    if blog_address and ids and pwd and (True):
-        crawling_cmt_label = Label(root, text='해당 포스트의 댓글에 달린 이메일들을 가져왔습니다!')
-        crawling_cmt_label.grid(row=4, column=0, columnspan=3, sticky='ew')
-    else:
-        showerror("Error", "잘못된 정보가 있습니다.\n다시 확인해주세요.")
-        return 0
-
-    null_label2.grid(row=5, column=0, columnspan=3, sticky='ew')
-
-    from_email_label.grid(row=6, column=0, sticky='ew')
-    from_email_entry.grid(row=6, column=1, sticky='ew')
-
-    ok_button_2.grid(row=6, column=2, sticky='ew')
-'''
-
-'''print(ids)
-
-ok_button_1.bind('<Button-1>', ok_button_1_click)
-
-
-def ok_button_2_click(string):
-    global blog_address, ids, pwd
-    print(ids)
-
-    if blog_address and ids and pwd:
-        std_email = from_email_entry.get()
-        # std_email = zziczzic94@gmail.com
-
-        while True:
-            if std_email in email_lists:
-
-                idx = email_lists.index(std_email)
-                result_list = email_lists[:idx + 1]
-                result_list = list(map(lambda x: x + ',', result_list))
-
-                showinfo('실행 완료', '이메일을 가져왔습니다. "결과 출력" 버튼을 눌러주세요.')
-                print_clear_label = Label(root, text='이메일을 모두 가져왔습니다!')
-                print_clear_label.grid(row=7, column=0, sticky='ew')
-                with open('result.txt', 'w') as f:
-                    for i in result_list:
-                        f.write(i)
-
-                view_file_button = Button(root, text='결과 출력')
-                view_file_button.grid(row=7, column=1, columnspan=2, sticky='ew')
-
-                def view_file_button_click(string):
-                    with open('result.txt', 'r') as f:
-                        printed = f.read()
-
-                    frame = Frame(root)
-                    scrollbar = Scrollbar(frame)
-                    scrollbar.pack(side='right', fill='y')
-                    result_text = Text(frame, yscrollcommand=scrollbar.set)
-                    result_text.insert(1.0, printed)
-                    result_text.configure(state='disabled')
-                    result_text.pack(fill="both", expand=True)
-                    scrollbar.config(command=result_text.yview)
-                    frame.grid(row=8, column=0, columnspan=3, sticky='sn')
-
-                view_file_button.bind('<Button-1>', view_file_button_click)
-                break
-
-            else:
-                showerror("Error", "해당 이메일은 댓글에 없습니다.\n 다시 입력해주세요.")
-                return 0
-
-    else:
-        showerror('Error', '먼저 블로그 주소와 아이디, 패스워드를 입력해 주세요.')
-        return 0
-
-    view_file_button.bind('<Button-1>', view_file_button_click)
-
-
-ok_button_2.bind('<Button-1>', ok_button_2_click)'''
-
 def ok_button_click(string):
     global blog_address, ids, pwd, from_email
     blog_address = blog_address_entry.get()
     ids = id_entry.get()
     pwd = pwd_entry.get()
     from_email = from_email_entry.get()
-    
+
     if blog_address and ids and pwd and from_email:
-        main.Blog_Naver(blog_address,from_email,ids,pwd)
-        
-        
-    
+        results = functions.Blog_Naver(blog_address,from_email,ids,pwd)
+        if results:
+            with open('result.txt', 'w') as f:
+                for i in results:
+                    f.write(i)
+            showinfo('확인','원하시는 이메일들을 성공적으로 가져왔습니다.')
+
+            with open('result.txt', 'r') as f:
+                printed = f.read()
+
+            frame = Frame(root)
+            scrollbar = Scrollbar(frame)
+            scrollbar.pack(side='right', fill='y')
+            result_text = Text(frame, yscrollcommand=scrollbar.set)
+            result_text.insert(1.0, printed)
+            result_text.configure(state='disabled')
+            result_text.pack(fill="both", expand=True)
+            scrollbar.config(command=result_text.yview)
+            frame.grid(row=6, column=0, columnspan=3, sticky='sn')
+
+
+        else:
+            showerror('Error','입력된 값 중 잘못된 값이 있습니다.\n다시 확인해주세요.')
+            return 0
+
     else:
-        showerror('Error','입력 창에 빈칸이 있습니다. 입력창을 모두 채워주세요.')
-        
+        showerror('Error','입력 창에 빈칸이 있습니다.\n입력창을 모두 채워주세요.')
+        return 0
+
 
 
 ok_button.bind('<Button-1>',ok_button_click)
