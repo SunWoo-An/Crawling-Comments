@@ -1,96 +1,133 @@
+import re
+import os
 from tkinter import *
-from tkinter import filedialog
-from tkinter.messagebox import *
-import functions
-global blog_addres, ids, pwd
+import pyperclip
+from time import sleep
 from selenium import webdriver
+from bs4 import BeautifulSoup
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
-blog_address, ids, pwd, from_email = False, False, False, False
+check_mail = False
+mail_index = 0
 
-root = Tk()
-root.resizable(False, False)
-printed = ''
+def Blog_Naver(Url, mail, ID, Pwd):  # 1번째 인자 : 맨 끝에 있는 메일주소 , 2번째 인자 : ID , 3번째 인자 : Password
+    Defined_list = []
+    driver = webdriver.Chrome('C:\\Users\\CKIRUser\\Downloads\\chromedriver_83version.exe')
+    global check_mail
+    global mail_index
+    global is_error
+    is_error = False
+    try:
+        driver.get(url=Url)
+        driver.switch_to.frame('mainFrame')
+        # 블로그 안에서 바로 로그인 버튼을 누름.
+        driver.find_element(By.XPATH, '//*[@id="gnb-area"]/ul/li[4]/a').click()
+        # ID pwd 카피한 후 자동입력
+        pyperclip.copy(ID)
+        driver.find_element(By.ID, 'id').send_keys(Keys.CONTROL + 'v')
+        sleep(1)
+        pyperclip.copy(Pwd)
+        driver.find_element(By.ID, 'pw').send_keys(Keys.CONTROL + 'v')
+        driver.implicitly_wait(3)
+        driver.find_element(By.XPATH, '//*[@id="log.login"]').click()
+        driver.implicitly_wait(3)
 
-# 컴포넌트 정의
-root.title('댓글 email 가져오기')
+        driver.switch_to.frame('mainFrame')
+        com = driver.find_element(By.XPATH, '//*[@id="Comi222616996072"]')
 
-root.filename = filedialog.askopenfilename(initialdir="")
+        sleep(1)
+        com.click()
+        count = 0
+        while count < 2:
+            lists = []
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            comments = soup.find_all('div', {'class': 'u_cbox_text_wrap'})
+            for comment in comments:
+                lists.append(comment.get_text().strip())
+            lists = extract_email(lists)
+            scrattered_list = check_mails(mail, lists)
+            if (check_mail == True):
+                Defined_list.extend(scrattered_list[mail_index:])
+                break
+            else:
+                Defined_list.extend(scrattered_list)
+                driver.implicitly_wait(5)
+                left = driver.find_element(By.XPATH,'//*[@id="naverComment_201_222616996072_ct"]/div[1]/div/div[2]/a[1]')
+                left.click()
+                prev = soup.find('strong', {'class': '_currentPageNo'})
+                prev_num = int(prev.get_text().strip())
+                print(prev_num)
+            if (prev_num == 1):
+                count += 1
+        insert_txt(Defined_list)
+        driver.quit()
 
-blog_address_label = Label(root, text='네이버 블로그 주소')
-blog_address_entry = Entry(root)
+        Defined_list = list(map(lambda x: x + ',', Defined_list))
+        return Defined_list
 
-id_label = Label(root, text='ID')
-id_entry = Entry(root)
-
-pwd_label = Label(root, text='PWD')
-pwd_entry = Entry(root, show = "*")
-
-null_label1 = Label(root, text='-'*65)
-
-from_email_label = Label(root, text='어떤 email부터 가져올까요?')
-from_email_entry = Entry(root)
-ok_button = Button(root, text='확인')
-
-null_label2 = Label(root, text='\n')
-
-
-def ok_button_click(string):
-    global blog_address, ids, pwd, from_email
-    blog_address = blog_address_entry.get()
-    ids = id_entry.get()
-    pwd = pwd_entry.get()
-    from_email = from_email_entry.get()
-
-    if blog_address and ids and pwd and from_email:
-        results = functions.Blog_Naver(blog_address,from_email,ids,pwd)
-        if results:
-            with open('result.txt', 'w') as f:
-                for i in results:
-                    f.write(i)
-            showinfo('확인','원하시는 이메일들을 성공적으로 가져왔습니다.')
-
-            with open('result.txt', 'r') as f:
-                printed = f.read()
-
-            frame = Frame(root)
-            scrollbar = Scrollbar(frame)
-            scrollbar.pack(side='right', fill='y')
-            result_text = Text(frame, yscrollcommand=scrollbar.set)
-            result_text.insert(1.0, printed)
-            result_text.configure(state='disabled')
-            result_text.pack(fill="both", expand=True)
-            scrollbar.config(command=result_text.yview)
-            frame.grid(row=6, column=0, columnspan=3, sticky='sn')
+    except:
+        is_error = True
+        return False
 
 
-        else:
-            showerror('Error','입력된 값 중 잘못된 값이 있습니다.\n다시 확인해주세요.')
-            return 0
+def check_mails(mail, comments):
+    i = 0
+    global check_mail
+    global mail_index
+    last_list = []
+    if (str(mail) == '0'):
+        for comment in comments:
+            last_list.append(comment)
+    else:
+        # for문이 아닌 자료구조를 통해서 쉽게 search를 먼저 한 뒤에 list 에 넣는 방법을 생각해보자.
+        for comment in comments:
+            if (comment != mail):
+                last_list.append(comment)
+            else:
+                last_list.append(comment)
+                check_mail = True
+                mail_index = i
+            i += 1
+    return last_list
+
+
+def insert_txt(list_name):
+    with open('Defined Lists.txt', 'w', encoding='UTF-8') as f:
+        for line in list_name:
+            f.writelines(line)
+
+
+def email_preprocessing(string):
+    valid_email = re.compile('[A-Za-z0-9-_+]+@[a-z]+[.]+[a-z]+')
+    result = valid_email.search(string)
+
+    if result:
+        return result.group()
 
     else:
-        showerror('Error','입력 창에 빈칸이 있습니다.\n입력창을 모두 채워주세요.')
-        return 0
+        return result
 
 
+def extract_email(comment):
+    result = []
 
-ok_button.bind('<Button-1>',ok_button_click)
+    for each_comment in comment:
+        comment_token = each_comment.split(' ')
+        if email_preprocessing(comment_token[0]):
+            preclean = email_preprocessing(comment_token[0])
+            result.append(preclean)
 
-# 배치
-blog_address_label.grid(row=0, column=0, sticky='ew')
-blog_address_entry.grid(row=0, column=1, sticky='ew')
+        elif email_preprocessing(comment_token[-1]):
+            preclean = email_preprocessing(comment_token[-1])
+            result.append(preclean)
 
-id_label.grid(row=1, column=0, sticky='ew')
-id_entry.grid(row=1, column=1, sticky='ew')
+        else:
+            for tokens in comment_token:
+                if email_preprocessing(tokens):
+                    preclean = email_preprocessing(tokens)
+                    result.append(preclean)
+                    break
 
-pwd_label.grid(row=2, column=0, sticky='ew')
-pwd_entry.grid(row=2, column=1, sticky='ew')
-
-
-null_label1.grid(row=3, column=0, columnspan=3, sticky='ew')
-from_email_label.grid(row=4, column=0, sticky='ew')
-from_email_entry.grid(row=4, column=1, sticky='ew')
-
-ok_button.grid(row=0, column=2, rowspan=5, sticky='sn')
-null_label2.grid(row=5, column=0, columnspan=3, sticky='ew')
-
-root.mainloop()
+    return result
