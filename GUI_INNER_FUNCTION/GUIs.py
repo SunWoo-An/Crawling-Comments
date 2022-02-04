@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import filedialog
 from tkinter.messagebox import *
 import functions
 global blog_addres, ids, pwd
@@ -13,6 +14,8 @@ printed = ''
 # 컴포넌트 정의
 root.title('댓글 email 가져오기')
 
+root.filename = filedialog.askopenfilename(initialdir="")
+
 blog_address_label = Label(root, text='네이버 블로그 주소')
 blog_address_entry = Entry(root)
 
@@ -20,7 +23,7 @@ id_label = Label(root, text='ID')
 id_entry = Entry(root)
 
 pwd_label = Label(root, text='PWD')
-pwd_entry = Entry(root)
+pwd_entry = Entry(root, show = "*")
 
 null_label1 = Label(root, text='-'*65)
 
