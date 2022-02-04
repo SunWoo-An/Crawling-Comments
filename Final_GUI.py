@@ -1,8 +1,15 @@
 from tkinter import *
 from tkinter.messagebox import *
 import main
+
 global blog_addres, ids, pwd
 blog_address, ids, pwd, from_email = False, False, False, False
+
+'''
+블로그 주소 : https://blog.naver.com/bjdmc4/222616996072
+id : bjdmc4
+pwd : qjawns4!
+'''
 
 root = Tk()
 root.resizable(False, False)
@@ -18,9 +25,9 @@ id_label = Label(root, text='ID')
 id_entry = Entry(root)
 
 pwd_label = Label(root, text='PWD')
-pwd_entry = Entry(root,show="*")
+pwd_entry = Entry(root, show="*")
 
-null_label1 = Label(root, text='-'*65)
+null_label1 = Label(root, text='-' * 65)
 
 from_email_label = Label(root, text='어떤 email부터 가져올까요?')
 from_email_entry = Entry(root)
@@ -37,12 +44,12 @@ def ok_button_click(string):
     from_email = from_email_entry.get()
 
     if blog_address and ids and pwd and from_email:
-        results = main.Blog_Naver(blog_address,from_email,ids,pwd)
+        results = main.Blog_Naver(blog_address, from_email, ids, pwd)
         if results:
             with open('result.txt', 'w') as f:
-                for i in result_list:
+                for i in results:
                     f.write(i)
-            showinfo('확인','원하시는 이메일들을 성공적으로 가져왔습니다.')
+            showinfo('확인', '원하시는 이메일들을 성공적으로 가져왔습니다.')
 
             with open('result.txt', 'r') as f:
                 printed = f.read()
@@ -59,16 +66,17 @@ def ok_button_click(string):
 
 
         else:
-            showerror('Error','입력된 값 중 잘못된 값이 있습니다.\n다시 확인해주세요.')
+            showerror('Error', '입력된 값 중 잘못된 값이 있습니다.\n다시 확인해주세요.')
             return 0
 
     else:
-        showerror('Error','입력 창에 빈칸이 있습니다.\n입력창을 모두 채워주세요.')
+        showerror('Error', '입력 창에 빈칸이 있습니다.\n입력창을 모두 채워주세요.')
         return 0
 
 
+root.bind('<Return>', ok_button_click)
 
-ok_button.bind('<Button-1>',ok_button_click)
+ok_button.bind('<Button-1>', ok_button_click)
 
 # 배치
 blog_address_label.grid(row=0, column=0, sticky='ew')
@@ -79,7 +87,6 @@ id_entry.grid(row=1, column=1, sticky='ew')
 
 pwd_label.grid(row=2, column=0, sticky='ew')
 pwd_entry.grid(row=2, column=1, sticky='ew')
-
 
 null_label1.grid(row=3, column=0, columnspan=3, sticky='ew')
 from_email_label.grid(row=4, column=0, sticky='ew')
