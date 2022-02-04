@@ -19,7 +19,7 @@
 
                                                                    Caution Points
                                                                   
-                                                     이 프로그램은 Chrome 를 이용한 Crawler 입니다.
+                                                     이 프로그램은 Chrome 브라우저를 이용한 Crawler 입니다.
                                                      
                                      혹여나 Chrome 사이트가 없으신 분들은 Chrome 을 다운받아주셔야 프로그램이 실행이 됩니다.
 
