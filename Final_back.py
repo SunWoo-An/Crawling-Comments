@@ -1,28 +1,31 @@
 import re
-import os
-from tkinter import *
+import pyperclip
 from time import sleep
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
-Final_list=[]
+check_mail = False
+mail_index = 0
+
 def Blog_Naver(Url, mail, ID, Pwd):  # 1번째 인자 : 맨 끝에 있는 메일주소 , 2번째 인자 : ID , 3번째 인자 : Password
+    Defined_list = []
+    driver = webdriver.Chrome('C:\\Users\\chromedriver.exe')
+    global check_mail
+    global mail_index
     global is_error
     is_error = False
     try:
-        global list
         driver.get(url=Url)
-
         driver.switch_to.frame('mainFrame')
-
         # 블로그 안에서 바로 로그인 버튼을 누름.
         driver.find_element(By.XPATH, '//*[@id="gnb-area"]/ul/li[4]/a').click()
-
         # ID pwd 카피한 후 자동입력
         pyperclip.copy(ID)
-        pyperclip.copy(Pwd)
         driver.find_element(By.ID, 'id').send_keys(Keys.CONTROL + 'v')
+        sleep(1)
+        pyperclip.copy(Pwd)
         driver.find_element(By.ID, 'pw').send_keys(Keys.CONTROL + 'v')
         driver.implicitly_wait(3)
         driver.find_element(By.XPATH, '//*[@id="log.login"]').click()
@@ -33,61 +36,64 @@ def Blog_Naver(Url, mail, ID, Pwd):  # 1번째 인자 : 맨 끝에 있는 메일
 
         sleep(1)
         com.click()
-
         count = 0
         while count < 2:
-            list = []
+            lists = []
             html = driver.page_source
             soup = BeautifulSoup(html, 'html.parser')
             comments = soup.find_all('div', {'class': 'u_cbox_text_wrap'})
-
             for comment in comments:
-                list.append(comment.get_text().strip())
-            list = extract_email(list)
-            Defined_list = check_mail(mail, list)
-
-            if (Defined_list[0] == 'Start'):
+                lists.append(comment.get_text().strip())
+            lists = extract_email(lists)
+            scrattered_list = check_mails(mail, lists)
+            if (check_mail == True):
+                Defined_list.extend(scrattered_list[mail_index:])
                 break
             else:
+                Defined_list.extend(scrattered_list)
                 driver.implicitly_wait(5)
-                left = driver.find_element(By.XPATH,
-                                           '//*[@id="naverComment_201_222616996072_ct"]/div[1]/div/div[2]/a[1]')
+                left = driver.find_element(By.XPATH,'//*[@id="naverComment_201_222616996072_ct"]/div[1]/div/div[2]/a[1]')
                 left.click()
                 prev = soup.find('strong', {'class': '_currentPageNo'})
                 prev_num = int(prev.get_text().strip())
                 print(prev_num)
             if (prev_num == 1):
                 count += 1
-        insert_txt()
+        insert_txt(Defined_list)
         driver.quit()
 
+        Defined_list = list(map(lambda x: x + ',', Defined_list))
         return Defined_list
 
     except:
         is_error = True
         return False
 
-def check_mail(mail, comments):
+
+def check_mails(mail, comments):
     i = 0
-    global Final_list
-    if (int(mail) == 0):
+    global check_mail
+    global mail_index
+    last_list = []
+    if (str(mail) == '0'):
         for comment in comments:
-            Final_list.append(comment)
+            last_list.append(comment)
     else:
         # for문이 아닌 자료구조를 통해서 쉽게 search를 먼저 한 뒤에 list 에 넣는 방법을 생각해보자.
         for comment in comments:
             if (comment != mail):
-                Final_list.append(comment)
+                last_list.append(comment)
             else:
-                Final_list.insert(0,'Start')
-                break
-    return Final_list
+                last_list.append(comment)
+                check_mail = True
+                mail_index = i
+            i += 1
+    return last_list
 
 
-def insert_txt():
-    global Final_list
+def insert_txt(list_name):
     with open('Defined Lists.txt', 'w', encoding='UTF-8') as f:
-        for line in Final_list:
+        for line in list_name:
             f.writelines(line)
 
 
