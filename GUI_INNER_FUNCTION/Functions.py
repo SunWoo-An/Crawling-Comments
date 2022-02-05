@@ -16,7 +16,10 @@ def Blog_Naver(Url, mail, ID, Pwd, driver_place):  # 1번째 인자 : 맨 끝에
     global check_mail
     global mail_index
     global is_error
+
     is_error = False
+
+
     try:
         driver.get(url=Url)
         driver.switch_to.frame('mainFrame')
@@ -57,11 +60,14 @@ def Blog_Naver(Url, mail, ID, Pwd, driver_place):  # 1번째 인자 : 맨 끝에
                 left.click()
                 prev = soup.find('strong', {'class': '_currentPageNo'})
                 prev_num = int(prev.get_text().strip())
-                print(prev_num)
             if (prev_num == 1):
                 count += 1
         insert_txt(Defined_list)
         driver.quit()
+
+        if str(mail) != '0' and check_mail == False:
+            return False
+
 
         Defined_list = list(map(lambda x: x + ',', Defined_list))
         return Defined_list
@@ -79,6 +85,7 @@ def check_mails(mail, comments):
     if (str(mail) == '0'):
         for comment in comments:
             last_list.append(comment)
+
     else:
         # for문이 아닌 자료구조를 통해서 쉽게 search를 먼저 한 뒤에 list 에 넣는 방법을 생각해보자.
         for comment in comments:
@@ -86,6 +93,7 @@ def check_mails(mail, comments):
                 last_list.append(comment)
             else:
                 last_list.append(comment)
+
                 check_mail = True
                 mail_index = i
             i += 1
