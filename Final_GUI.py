@@ -7,8 +7,8 @@ blog_address, ids, pwd, from_email = False, False, False, False
 
 '''
 블로그 주소 : https://blog.naver.com/bjdmc4/222616996072
-id : bjdmc4
-pwd : qjawns4!
+id : 
+pwd : 
 '''
 
 root = Tk()
