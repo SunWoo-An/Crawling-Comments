@@ -1,6 +1,4 @@
 import re
-import os
-from tkinter import *
 import pyperclip
 from time import sleep
 from selenium import webdriver
@@ -11,9 +9,10 @@ from selenium.webdriver.common.keys import Keys
 check_mail = False
 mail_index = 0
 
-def Blog_Naver(Url, mail, ID, Pwd):  # 1번째 인자 : 맨 끝에 있는 메일주소 , 2번째 인자 : ID , 3번째 인자 : Password
+def Blog_Naver(Url, mail, ID, Pwd, driver_place):  # 1번째 인자 : 맨 끝에 있는 메일주소 , 2번째 인자 : ID , 3번째 인자 : Password
     Defined_list = []
-    driver = webdriver.Chrome('C:\\Users\\CKIRUser\\Downloads\\chromedriver_83version.exe')
+    driver_place = driver_place.replace("\\","\\\\")
+    driver = webdriver.Chrome(driver_place)
     global check_mail
     global mail_index
     global is_error
@@ -100,7 +99,7 @@ def insert_txt(list_name):
 
 
 def email_preprocessing(string):
-    valid_email = re.compile('[A-Za-z0-9-_+]+@[a-z]+[.]+[a-z]+')
+    valid_email = re.compile('[A-Za-z0-9]+[A-Za-z0-9-_+.]+@[a-z]+[.]+[a-z]+')
     result = valid_email.search(string)
 
     if result:
