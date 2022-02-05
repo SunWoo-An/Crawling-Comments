@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter.messagebox import *
-import main
+import Functions
 
 global blog_addres, ids, pwd
 blog_address, ids, pwd, from_email = False, False, False, False
