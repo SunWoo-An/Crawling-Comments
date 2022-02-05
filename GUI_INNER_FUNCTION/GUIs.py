@@ -1,10 +1,12 @@
 from tkinter import *
+from tkinter import filedialog
 from tkinter.messagebox import *
-import Functions
+import main
 
 global blog_addres, ids, pwd
 blog_address, ids, pwd, from_email = False, False, False, False
 
+file_place = ''
 
 root = Tk()
 root.resizable(False, False)
@@ -23,7 +25,7 @@ pwd_label = Label(root, text='PWD')
 pwd_entry = Entry(root, show="*")
 
 chrome_driver_place_label = Label(root, text='Chromedriver 위치')
-chrome_driver_place_entry = Entry(root)
+chrome_driver_place_entry = Button(root, text = 'chromedriver 가져오기')
 
 null_label1 = Label(root, text='-' * 65)
 
@@ -39,7 +41,6 @@ def ok_button_click(string):
     blog_address = blog_address_entry.get()
     ids = id_entry.get()
     pwd = pwd_entry.get()
-    chrome_driver_place = chrome_driver_place_entry.get()
     from_email = from_email_entry.get()
 
     if blog_address and ids and pwd and from_email:
@@ -73,9 +74,15 @@ def ok_button_click(string):
         return 0
 
 
+def bring_to_me(string):
+    global file_place
+    root.filename = filedialog.askopenfilename(initialdir = "C://",title = "파일 열기")
+    file_place += root.filename
+    
+    
 root.bind('<Return>', ok_button_click)
-
 ok_button.bind('<Button-1>', ok_button_click)
+chrome_driver_place_entry.bind('<Button-1>', bring_to_me)
 
 # 배치
 blog_address_label.grid(row=0, column=0, sticky='ew')
