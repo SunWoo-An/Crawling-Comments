@@ -1,12 +1,11 @@
 from tkinter import *
-from tkinter import filedialog
 from tkinter.messagebox import *
+from tkinter import filedialog
 import main
 
-global blog_addres, ids, pwd
-blog_address, ids, pwd, from_email = False, False, False, False
+global blog_addres, ids, pwd, from_email, file_place
+blog_address, ids, pwd, from_email, file_place = False, False, False, False, False
 
-file_place = ''
 
 root = Tk()
 root.resizable(False, False)
@@ -21,11 +20,12 @@ blog_address_entry = Entry(root)
 id_label = Label(root, text='ID')
 id_entry = Entry(root)
 
+
 pwd_label = Label(root, text='PWD')
 pwd_entry = Entry(root, show="*")
 
 chrome_driver_place_label = Label(root, text='Chromedriver 위치')
-chrome_driver_place_entry = Button(root, text = 'chromedriver 가져오기')
+chrome_driver_place_button = Button(root, text='크롬드라이버 선택하기')
 
 null_label1 = Label(root, text='-' * 65)
 
@@ -37,14 +37,15 @@ null_label2 = Label(root, text='\n')
 
 
 def ok_button_click(string):
-    global blog_address, ids, pwd, from_email
+    global blog_address, ids, pwd, from_email, file_place
     blog_address = blog_address_entry.get()
     ids = id_entry.get()
     pwd = pwd_entry.get()
+
     from_email = from_email_entry.get()
 
     if blog_address and ids and pwd and from_email:
-        results = main.Blog_Naver(blog_address, from_email, ids, pwd, chrome_driver_place)
+        results = main.Blog_Naver(blog_address, from_email, ids, pwd, file_place)
         if results:
             with open('result.txt', 'w') as f:
                 for i in results:
@@ -76,13 +77,16 @@ def ok_button_click(string):
 
 def bring_to_me(string):
     global file_place
-    root.filename = filedialog.askopenfilename(initialdir = "C://",title = "파일 열기")
-    file_place += root.filename
-    
-    
+    root.filename = filedialog.askopenfilename(initialdir="C://", title="파일 열기")
+    file_place = root.filename
+
+
+
+chrome_driver_place_button.bind('<Button-1>', bring_to_me)
+
 root.bind('<Return>', ok_button_click)
+
 ok_button.bind('<Button-1>', ok_button_click)
-chrome_driver_place_entry.bind('<Button-1>', bring_to_me)
 
 # 배치
 blog_address_label.grid(row=0, column=0, sticky='ew')
@@ -95,13 +99,13 @@ pwd_label.grid(row=2, column=0, sticky='ew')
 pwd_entry.grid(row=2, column=1, sticky='ew')
 
 chrome_driver_place_label.grid(row=3, column=0, sticky='ew')
-chrome_driver_place_entry.grid(row=3, column=1, sticky='ew')
+chrome_driver_place_button.grid(row=3, column=1, sticky='ew')
 
 null_label1.grid(row=4, column=0, columnspan=3, sticky='ew')
 from_email_label.grid(row=5, column=0, sticky='ew')
 from_email_entry.grid(row=5, column=1, sticky='ew')
 
-ok_button.grid(row=0, column=2, rowspan=5, sticky='sn')
+ok_button.grid(row=0, column=2, rowspan=6, sticky='sn')
 null_label2.grid(row=6, column=0, columnspan=3, sticky='ew')
 
 root.mainloop()
